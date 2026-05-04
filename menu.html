@@ -139,7 +139,6 @@
         }
         .fade-active { animation: fadeSequence 6s forwards; }
         
-        /* Нова анімація для переходу по кнопці Історія */
         .fade-quick { animation: fadeSequenceQuick 2s forwards; }
 
         @keyframes fadeSequence {
@@ -382,7 +381,11 @@
                         <span style="color: #666;">|</span>
                         <span>SOL: 452</span>
                     </div>
-                    <button class="settings-mini-btn" onclick="toggleSettings()">Настройки</button>
+                    <!-- Блок кнопок управління -->
+                    <div style="display: flex; gap: 10px;">
+                        <button class="settings-mini-btn" onclick="toggleSettings()">Настройки</button>
+                        <button class="settings-mini-btn" id="reset-game-btn">Скинути</button>
+                    </div>
                 </div>
                 <div class="status-group">
                     <span id="stat-coords">M: 24.5000°N 135.2000°E</span>
@@ -443,7 +446,6 @@
                 <button id="mission-btn" class="mission-btn">Розпочати місію</button>
 
                 <div id="extra-btns" class="extra-buttons-container">
-                    <!-- Додано ID для кнопки Історія -->
                     <button id="history-btn" class="sub-btn">Історія</button>
                     <button class="sub-btn disabled-btn">База</button>
                     <button class="sub-btn disabled-btn">Енерго батареї</button>
@@ -478,6 +480,8 @@
         const darkToggle = document.getElementById('dark-toggle');
         const darkStatus = document.getElementById('dark-status');
         const screenContainer = document.getElementById('screen-container');
+
+        const resetBtn = document.getElementById('reset-game-btn');
 
         let isPoweredOn = false;
         let isDarkMode = true;
@@ -662,26 +666,24 @@
             }, 600);
         });
 
-historyBtn.addEventListener('click', () => {
-    playClickSound(); // Відтворюємо звук кліку
-    
-    // Запускаємо анімацію темного шару
-    fadeLayer.classList.remove('fade-active', 'fade-quick'); 
-    void fadeLayer.offsetWidth; // Перезапуск анімації
-    fadeLayer.classList.add('fade-quick');
+        historyBtn.addEventListener('click', () => {
+            playClickSound(); // Відтворюємо звук кліку
+            
+            // Запускаємо анімацію темного шару
+            fadeLayer.classList.remove('fade-active', 'fade-quick'); 
+            void fadeLayer.offsetWidth; // Перезапуск анімації
+            fadeLayer.classList.add('fade-quick');
 
-    // Через 800-1000мс (коли екран стане чорним), міняємо сторінку
-    setTimeout(() => {
-        window.location.href = 'history.html'; // Вкажи тут назву свого файлу
-    }, 1000); 
-});
-
-        document.querySelectorAll('.sub-btn:not(.disabled-btn):not(#history-btn)').forEach(btn => {
-            btn.addEventListener('click', () => { playClickSound(); });
+            // Через 800-1000мс (коли екран стане чорним), міняємо сторінку
+            setTimeout(() => {
+                window.location.href = 'history.html'; // Вкажи тут назву свого файлу
+            }, 1000); 
         });
-        
+
+        resetBtn.addEventListener('click', playClickSound);
+
         document.querySelectorAll('button').forEach(btn => {
-            if (!btn.onclick && btn.id !== 'central-start-btn' && btn.id !== 'mission-btn' && btn.id !== 'history-btn') {
+            if (!btn.onclick && !['central-start-btn', 'mission-btn', 'history-btn', 'reset-game-btn'].includes(btn.id)) {
                 btn.addEventListener('click', playClickSound);
             }
         });
